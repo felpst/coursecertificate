@@ -29,6 +29,7 @@ const serverlessConfiguration: AWS = {
     ]
   },
   // import the function via paths
+  package: { individually: false, include: ['./src/templates/**'] },
   functions: { 
     generateCertificate: {
       handler: "src/functions/generateCertificate.handler",
@@ -37,14 +38,12 @@ const serverlessConfiguration: AWS = {
           http: {
             path: "generateCertificate",
             method: "post",
-
             cors: true,
           }
         }
       ]
     }
   },
-  package: { individually: true },
   custom: {
     esbuild: {
       bundle: true,
@@ -55,6 +54,7 @@ const serverlessConfiguration: AWS = {
       define: { 'require.resolve': undefined },
       platform: 'node',
       concurrency: 10,
+      external: ['chrome-aws-lambda'],
     },
     dynamodb: {
       stages: ["dev", "local"],
